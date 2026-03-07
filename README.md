@@ -1,12 +1,23 @@
-# smart-expense-tracker
-A full-stack expense tracking web app to manage daily spending and budgets.
+# Smart Expense Tracker
+A web application that helps users track income and expenses, manage personal budgets, and analyze spending habits through a simple dashboard.
+
+The goal of this project is to build a full-stack financial tracking application where users can monitor their financial activity and gain insights into their spending patterns.
+
+## Project Status
+This project is currently in active development.
+
+The initial version focuses on building the complete frontend user interface.
+Backend APIs, authentication, and database integration will be implemented in the next stages.
 
 ## Features
-- Add new expenses
-- Categorize expenses (Food, Travel, Shopping, etc.)
-- View list of expenses
-- Delete expenses
-- Simple and clean user interface
+- User registration and login interface
+- Financial dashboard overview
+- Add income sources
+- Add expenses with categories
+- Expense list and tracking
+- Spending analytics overview
+- User profile management
+- Responsive and clean UI layout
 
 ## Tech Stack
 Frontend:
@@ -21,25 +32,62 @@ Backend (Planned):
 Database (Planned):
 - MongoDB
 
+Authentication (Planned):
+- bcrypt password hashing
+- JWT authentication
+
 ## Project Structure
 
 smart-expense-tracker
 │
 ├── client
+│   │
 │   ├── index.html
-│   ├── style.css
-│   └── script.js
+│   │
+│   ├── pages
+│   │   ├── login.html
+│   │   ├── register.html
+│   │   ├── dashboard.html
+│   │   ├── add-income.html
+│   │   ├── add-expense.html
+│   │   ├── expenses.html
+│   │   ├── analytics.html
+│   │   └── profile.html
+│   │
+│   ├── css
+│   │   ├── main.css
+│   │   ├── auth.css
+│   │   └── dashboard.css
+│   │
+│   └── js
+│       └── app.js
 │
 ├── server
-│   ├── server.js
+│   └── server.js
 │
 └── README.md
 
 ## Future Improvements
-- User authentication (Login & Signup)
-- Store expenses in database
-- Monthly spending analytics
-- Budget tracking dashboard
+- Backend API development
+- Secure authentication system
+- Database integration
+- Expense filtering and search
+- Data visualization charts
+- Monthly budgeting system
+- Mobile responsive improvements
 
-## Project Status
-This project is currently under development. Backend integration will be implemented next.
+## Project Goal
+The objective of this project is to build a complete full-stack expense management system that demonstrates:
+
+- Frontend Development
+- Backend API development
+- Database design
+- Authentication and security
+- Financial data analysis
+
+## Author
+Deepthi Janumpally
+Github: https://github.com/janumpallydeepthi
+LinkedIn: https://linkedin.com/in/deepthi-janumpally
+
+## Live Demo
