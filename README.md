@@ -31,6 +31,7 @@ smart-expense-tracker
 │   └── script.js
 │
 ├── server
+│   ├── server.js
 │
 └── README.md
 
