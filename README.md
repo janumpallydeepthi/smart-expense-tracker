@@ -91,3 +91,4 @@ Github: https://github.com/janumpallydeepthi
 LinkedIn: https://linkedin.com/in/deepthi-janumpally
 
 ## Live Demo
+https://janumpallydeepthi.github.io/smart-expense-tracker/
