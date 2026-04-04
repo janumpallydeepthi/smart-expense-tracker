@@ -1,3 +1,4 @@
+// Pool means db connection again & again not required
 const { Pool } = require('pg');
 
 const pool = new Pool({
