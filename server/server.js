@@ -1,11 +1,16 @@
 const express = require('express');
 const app = express();
 
+const cors = require("cors");
+
 require("dotenv").config();
 
 const authRoutes = require('./routes/authRoutes');
 const expenseRoutes = require('./routes/expenseRoutes');
 
+const authMiddleware = require('./middleware/auth');
+
+app.use(cors());
 app.use(express.json()); // reads json data
 
 // test route
