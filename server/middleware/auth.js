@@ -5,7 +5,7 @@ const authMiddleware = (req, res, next) => {
         const authHeader = req.headers.authorization;
 
         if (!authHeader) {
-            console.log("❌ No token provided");
+            console.log("No token provided");
             return res.status(401).json({ message: "No token provided" });
         }
 
@@ -17,7 +17,7 @@ const authMiddleware = (req, res, next) => {
         // Verify token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         
-        console.log("✅ Token verified for user:", decoded.email);
+        console.log("Token verified for user:", decoded.email);
         
         // Attach user to request
         req.user = {
@@ -28,7 +28,7 @@ const authMiddleware = (req, res, next) => {
         
         next();
     } catch (error) {
-        console.error("❌ Auth error:", error.message);
+        console.error("Auth error:", error.message);
         
         // Send specific error messages
         if (error.name === 'TokenExpiredError') {

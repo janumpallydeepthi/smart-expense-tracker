@@ -18,10 +18,10 @@ function Register() {
 
     try {
       await axios.post("http://localhost:3001/api/register", formData);
-      alert("✅ Registration successful! Please login.");
+      alert("Registration successful! Please login.");
       navigate("/");
     } catch (error) {
-      alert("❌ Registration failed. Email might already exist.");
+      alert("Registration failed. Email might already exist.");
     } finally {
       setLoading(false);
     }
