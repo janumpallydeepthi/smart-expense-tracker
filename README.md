@@ -40,10 +40,15 @@ Authentication (Planned):
 
 smart-expense-tracker
 │
+
 ├── client
+
 │   │
+
 │   ├── index.html
+
 │   │
+
 │   ├── pages
 │   │   ├── login.html
 │   │   ├── register.html
