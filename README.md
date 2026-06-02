@@ -39,37 +39,45 @@ Authentication (Planned):
 ## Project Structure
 
 smart-expense-tracker
-│
 
 ├── client
 
-│   │
-
 │   ├── index.html
 
-│   │
-
 │   ├── pages
+
 │   │   ├── login.html
+
 │   │   ├── register.html
+
 │   │   ├── dashboard.html
+
 │   │   ├── add-income.html
+
 │   │   ├── add-expense.html
+
 │   │   ├── expenses.html
+
 │   │   ├── analytics.html
+
 │   │   └── profile.html
-│   │
+
 │   ├── css
+
 │   │   ├── main.css
+
 │   │   ├── auth.css
+
 │   │   └── dashboard.css
-│   │
+
 │   └── js
+
 │       └── app.js
-│
+
 ├── server
+
 │   └── server.js
-│
+
 └── README.md
 
 ## Future Improvements
