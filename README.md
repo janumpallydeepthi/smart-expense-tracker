@@ -8,8 +8,9 @@
 
 A full‑stack web application for tracking income and expenses, visualizing spending habits, and managing personal finances – built with **React**, **Node.js**, **Express**, and **PostgreSQL**.
 
-**Live Demo**
-[Live](#https://smart-expense-tracker-six-snowy.vercel.app)
+## Live Demo
+
+[https://smart-expense-tracker-six-snowy.vercel.app](https://smart-expense-tracker-six-snowy.vercel.app)
 ---
 
 ## Table of Contents
