@@ -1,58 +1,93 @@
 # Smart Expense Tracker
-A web application that helps users track income and expenses, manage personal budgets, and analyze spending habits through a simple dashboard.
+[![React](https://img.shields.io/badge/React-19.2-blue?logo=react)](https://reactjs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-green?logo=node.js)](https://nodejs.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue?logo=postgresql)](https://www.postgresql.org/)
+[![Express](https://img.shields.io/badge/Express-5.2-black?logo=express)](https://expressjs.com/)
+[![JWT](https://img.shields.io/badge/JWT-authentication-orange?logo=jsonwebtokens)](https://jwt.io/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-The goal of this project is to build a full-stack financial tracking application where users can monitor their financial activity and gain insights into their spending patterns.
+A full‑stack web application for tracking income and expenses, visualizing spending habits, and managing personal finances – built with **React**, **Node.js**, **Express**, and **PostgreSQL**.
 
-## Project Status
-This project is currently in active development.
+**Live Demo:**
+---
 
-The initial version focuses on building the complete frontend user interface.
-Backend APIs, authentication, and database integration will be implemented in the next stages.
+## Table of Contents
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Architecture](#-architecture)
+- [Getting Started](#-getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Environment Variables](#environment-variables)
+- [API Endpoints](#-api-endpoints)
+- [Screenshots](#-screenshots)
+- [Future Plans](#-future-plans)
+- [Author](#-author)
+
+---
 
 ## Features
-- User registration and login interface
-- Financial dashboard overview
-- Add income sources
-- Add expenses with categories
-- Expense list and tracking
-- Spending analytics overview
-- User profile management
-- Responsive and clean UI layout
 
-## Tech Stack
-Frontend:
-- HTML
-- CSS
-- JavaScript
+| Area | Details |
+|------|---------|
+| **🔐 Authentication** | Secure signup/login with JWT, password hashing (bcrypt), and protected routes |
+| **📊 Dashboard** | Interactive charts (Pie, Bar, Line) showing expense distribution, monthly trends, spending patterns |
+| **💳 Expense Management** | Add, edit, delete, and view expenses with custom categories |
+| **🔍 Filtering & Sorting** | Search by category/amount, filter by category, sort by amount/date/category |
+| **📱 Responsive UI** | Clean, modern design with a collapsible sidebar and glass-morphism effects |
+| **🧑‍💻 User Profile** | View user info, logout, and account deletion (with cascade delete of all expenses) |
+| **📈 Analytics** | Quick stats: total expenses, average, highest transaction, and transaction count |
 
-Backend (Planned):
-- Node.js
-- Express.js
+---
 
-Database (Planned):
-- MongoDB
+## 🛠️ Tech Stack
 
-Authentication (Planned):
-- bcrypt password hashing
-- JWT authentication
+**Frontend**
+- [React](https://reactjs.org/) (v19) – UI library
+- [React Router](https://reactrouter.com/) (v7) – routing
+- [Chart.js](https://www.chartjs.org/) + [react-chartjs-2](https://react-chartjs-2.js.org/) – data visualisation
+- [Axios](https://axios-http.com/) – HTTP client
+- [React Icons](https://react-icons.github.io/react-icons/) – icon set
 
-## Future Improvements
-- Backend API development
-- Secure authentication system
-- Database integration
-- Expense filtering and search
-- Data visualization charts
-- Monthly budgeting system
-- Mobile responsive improvements
+**Backend**
+- [Node.js](https://nodejs.org/) (v18+) – runtime
+- [Express](https://expressjs.com/) (v5) – web framework
+- [PostgreSQL](https://www.postgresql.org/) (v16) – relational database
+- [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) – JWT handling
+- [bcrypt](https://github.com/kelektiv/node.bcrypt.js) – password hashing
+- [dotenv](https://github.com/motdotla/dotenv) – environment variables
 
-## Project Goal
-The objective of this project is to build a complete full-stack expense management system that demonstrates:
+---
 
-- Frontend Development
-- Backend API development
-- Database design
-- Authentication and security
-- Financial data analysis
+## 🧱 Architecture
+client/ # React frontend
+├── public/
+├── src/
+│ ├── components/ # Reusable UI (Layout, Sidebar, Navbar)
+│ ├── pages/ # Login, Register, Dashboard, Expenses, Add/Edit Expense
+│ ├── routes/ # AppRoutes, ProtectedRoute
+│ ├── services/ # Axios instance with JWT interceptor
+│ ├── constants/ # Shared category list
+│ └── App.js
+server/ # Node.js backend
+├── config/ # Database connection (db.js)
+├── controllers/ # Auth, Expense, User logic
+├── middleware/ # JWT authentication
+├── routes/ # API route handlers
+├── .env # Environment variables (not committed)
+└── server.js # Entry point
+
+---
+
+## Future Plans
+- Mobile app (React Native)
+- Budget goals per category with progress bars
+- Recurring expenses automation
+- CSV export of transactions
+- Email notifications for budget limits
+- Dark mode
+
+---
 
 ## Author
 Deepthi Janumpally
