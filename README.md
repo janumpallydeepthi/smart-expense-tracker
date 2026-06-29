@@ -11,6 +11,7 @@ A full‑stack web application for tracking income and expenses, visualizing spe
 ## Live Demo
 
 [https://smart-expense-tracker-six-snowy.vercel.app](https://smart-expense-tracker-six-snowy.vercel.app)
+
 ---
 
 ## Table of Contents
