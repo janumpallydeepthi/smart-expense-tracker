@@ -12,11 +12,12 @@ A full‑stack web application for tracking income and expenses, visualizing spe
 ---
 
 ## Table of Contents
-- [Features](#-features)
-- [Tech Stack](#-tech-stack)
-- [Architecture](#-architecture)
-- [Future Plans](#-future-plans)
-- [Author](#-author)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Architecture](#architecture)
+- [Getting Started](#getting-started)
+- [Future Plans](#future-plans)
+- [Author](#author)
 
 ---
 
