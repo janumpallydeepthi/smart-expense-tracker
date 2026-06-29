@@ -17,7 +17,7 @@ function Register() {
     setLoading(true);
 
     try {
-      await axios.post("http://localhost:3001/api/register", formData);
+      await axios.post("/register", formData);
       alert("Registration successful! Please login.");
       navigate("/");
     } catch (error) {
@@ -31,14 +31,14 @@ function Register() {
     <div className="auth-container">
       <div className="auth-card slide-up">
         <div className="auth-header">
-          <div className="auth-logo">🚀</div>
+          {/* <div className="auth-logo">🚀</div> */}
           <h2>Get Started</h2>
           <p>Create your free account</p>
         </div>
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
-            <label>👤 Full Name</label>
+            <label>Full Name</label>
             <input
               type="text"
               name="name"
@@ -50,7 +50,7 @@ function Register() {
           </div>
 
           <div className="form-group">
-            <label>📧 Email Address</label>
+            <label>Email Address</label>
             <input
               type="email"
               name="email"
@@ -62,7 +62,7 @@ function Register() {
           </div>
 
           <div className="form-group">
-            <label>🔒 Password</label>
+            <label>Password</label>
             <input
               type="password"
               name="password"

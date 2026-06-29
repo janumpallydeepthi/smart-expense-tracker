@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import axios from "../services/api";
+import api from "../services/api";
 import "./Register.css";
 
 function Login() {
@@ -24,7 +24,7 @@ function Login() {
 
     try {
       // Fixed: removed "/auth" from the path
-      const res = await axios.post("/login", formData);
+      const res = await api.post("/login", formData);
       
       console.log("Login response:", res.data);
       
