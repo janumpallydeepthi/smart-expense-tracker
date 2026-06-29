@@ -10,7 +10,10 @@ const userRoutes = require('./routes/userRoutes');
 
 const authMiddleware = require('./middleware/auth');
 
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000'
+}));
+
 app.use(express.json()); // reads json data
 
 // test route
@@ -31,6 +34,7 @@ app.get('/api/dashboard', authMiddleware, (req, res) => {
     });
 });
 
-app.listen(3001, () => {
-    console.log("Server running on port 3001");
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
