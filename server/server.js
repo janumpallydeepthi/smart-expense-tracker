@@ -1,12 +1,12 @@
 const express = require('express');
 const app = express();
-
 const cors = require("cors");
 
 require("dotenv").config();
 
 const authRoutes = require('./routes/authRoutes');
 const expenseRoutes = require('./routes/expenseRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 const authMiddleware = require('./middleware/auth');
 
@@ -21,6 +21,7 @@ app.get('/', async (req, res) => {
 // use routes
 app.use('/api', authRoutes);
 app.use('/api/expenses', expenseRoutes);
+app.use('/api/users', userRoutes);
 
 // create a proctored route
 app.get('/api/dashboard', authMiddleware, (req, res) => {

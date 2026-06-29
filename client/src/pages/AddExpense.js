@@ -3,61 +3,86 @@ import axios from "../services/api";
 import { useNavigate } from "react-router-dom";
 import "./AddExpense.css";
 
-const predefinedCategories = ["Food", "Travel", "Shopping", "Entertainment", "Bills", "Other"];
+const predefinedCategories = [
+  "Food",
+  "Travel",
+  "Shopping",
+  "Entertainment",
+  "Bills",
+  "Other",
+];
 
 function AddExpense() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     amount: "",
     category: "Food",
     customCategory: "",
+    date: new Date().toISOString().split("T")[0], // YYYY-MM-DD
   });
+
   const [showCustomInput, setShowCustomInput] = useState(false);
 
+  // ---------------- HANDLE CATEGORY ----------------
+  const handleCategoryChange = (e) => {
+    const selectedCategory = e.target.value;
+
+    setFormData((prev) => ({
+      ...prev,
+      category: selectedCategory,
+      customCategory: selectedCategory === "Other" ? prev.customCategory : "",
+    }));
+
+    setShowCustomInput(selectedCategory === "Other");
+  };
+
+  // ---------------- SUBMIT ----------------
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!formData.amount || Number(formData.amount) <= 0) {
+      alert("Please enter a valid amount");
+      return;
+    }
+
     setLoading(true);
 
     try {
-      // Determine final category value
       let finalCategory = formData.category;
-      if (formData.category === "Other" && formData.customCategory.trim()) {
+
+      if (
+        formData.category === "Other" &&
+        formData.customCategory.trim()
+      ) {
         finalCategory = formData.customCategory.trim();
       }
 
-      await axios.post("/expenses", {
+      const payload = {
         amount: formData.amount,
         category: finalCategory,
-      });
-      
+        date: formData.date,
+      };
+
+      console.log("Submitting expense:", payload);
+
+      await axios.post("/expenses", payload);
+
       alert("Expense added successfully");
       navigate("/expenses");
     } catch (err) {
-        if (!formData.amount || formData.amount <= 0) {
-    alert("Please enter a valid amount");
-    return;
-}
       console.error(err);
-      alert("Failed to add expense");
+      alert(
+        err.response?.data?.message ||
+          "Failed to add expense"
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  const handleCategoryChange = (e) => {
-    const selectedCategory = e.target.value;
-    setFormData({ ...formData, category: selectedCategory });
-    
-    // Show custom input only when "Other" is selected
-    setShowCustomInput(selectedCategory === "Other");
-    
-    // Reset custom category when switching from Other to something else
-    if (selectedCategory !== "Other") {
-      setFormData({ ...formData, category: selectedCategory, customCategory: "" });
-    }
-  };
-
+  // ---------------- UI ----------------
   return (
     <div className="add-expense-container">
       <div className="expense-form-card">
@@ -67,51 +92,81 @@ function AddExpense() {
         </div>
 
         <form onSubmit={handleSubmit} className="form-body">
+
+          {/* AMOUNT */}
           <div className="form-group">
             <label>Amount (₹)</label>
             <input
               type="number"
-              name="amount"
               placeholder="Enter amount"
               value={formData.amount}
-              onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, amount: e.target.value })
+              }
               required
               step="0.01"
               autoFocus
             />
           </div>
 
+          {/* DATE */}
+          <div className="form-group">
+            <label>📅 Date</label>
+            <input
+              type="date"
+              value={formData.date}
+              onChange={(e) =>
+                setFormData({ ...formData, date: e.target.value })
+              }
+              required
+              style={{
+                width: "100%",
+                padding: "10px",
+                borderRadius: "8px",
+                border: "1px solid #e2e8f0",
+              }}
+            />
+            <small>Choose expense date (defaults to today)</small>
+          </div>
+
+          {/* CATEGORY */}
           <div className="form-group">
             <label>Category</label>
             <select
               value={formData.category}
               onChange={handleCategoryChange}
-              className="category-select"
             >
               {predefinedCategories.map((cat) => (
-                <option key={cat} value={cat}>{cat}</option>
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
               ))}
             </select>
           </div>
 
+          {/* CUSTOM CATEGORY */}
           {showCustomInput && (
-            <div className="form-group custom-category-group fade-in">
-              <label>Custom Category Name</label>
+            <div className="form-group">
+              <label>Custom Category</label>
               <input
                 type="text"
-                placeholder="Enter custom category (e.g., Medical, Education, Subscription)"
+                placeholder="Enter custom category"
                 value={formData.customCategory}
-                onChange={(e) => setFormData({ ...formData, customCategory: e.target.value })}
-                required={formData.category === "Other"}
-                className="custom-input"
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    customCategory: e.target.value,
+                  })
+                }
               />
-              <small className="input-hint">
-                Example: Medical, Education, Subscription, Gifts, etc.
+              <small>
+                Example: Medical, Education, Subscription
               </small>
             </div>
           )}
 
-          <button type="submit" className="submit-btn" disabled={loading}>
+          {/* SUBMIT */}
+          <button type="submit" disabled={loading}>
             {loading ? "Processing..." : "Add Expense"}
           </button>
         </form>

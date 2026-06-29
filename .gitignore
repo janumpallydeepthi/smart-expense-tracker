@@ -1,2 +1,12 @@
 node_modules/
 .env
+.log
+
+client/node_modules/
+server/node_modules/
+
+Architecture diagram.png
+Codes.docx
+Outputs.docx
+
+client/src/constants/
