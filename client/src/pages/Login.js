@@ -89,7 +89,14 @@ function Login() {
 
           {/* Forgot Password */}
           <div className="auth-options">
-            <a href="#">Forgot Password?</a>
+            <button
+              type="button"
+              className="btn btn-link p-0 text-decoration-none"
+              onClick={() => alert("Reset password feature coming soon.")}
+              style={{ fontSize: '13px', color: '#6366f1', fontWeight: 500 }}
+            >
+              Forgot Password?
+            </button>
           </div>
 
           <button type="submit" className="auth-btn" disabled={loading}>

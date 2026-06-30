@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import api from "../services/api";
 import { useNavigate, useParams } from "react-router-dom";
 import { PREDEFINED_CATEGORIES } from "../constants/categories";
@@ -15,15 +15,17 @@ function EditExpense() {
   });
   const [showCustomInput, setShowCustomInput] = useState(false);
 
-  useEffect(() => {
-    fetchExpense();
-  }, []);
-
-  const fetchExpense = async () => {
+  // ---- FETCH EXPENSE ----
+  const fetchExpense = useCallback(async () => {
     try {
       const res = await api.get("/expenses");
+      // Convert id to number for proper comparison
       const expense = res.data.find((e) => e.id === Number(id));
-      if (!expense) return;
+      if (!expense) {
+        alert("Expense not found");
+        navigate("/expenses");
+        return;
+      }
       const isPredefined = PREDEFINED_CATEGORIES.includes(expense.category);
       const formattedDate = expense.created_at
         ? new Date(expense.created_at).toISOString().split("T")[0]
@@ -39,8 +41,13 @@ function EditExpense() {
       console.error(err);
       alert("Failed to load expense");
     }
-  };
+  }, [id, navigate]);
 
+  useEffect(() => {
+    fetchExpense();
+  }, [fetchExpense]);
+
+  // ---- HANDLE CATEGORY CHANGE ----
   const handleCategoryChange = (e) => {
     const selected = e.target.value;
     setFormData((prev) => ({
@@ -51,6 +58,7 @@ function EditExpense() {
     setShowCustomInput(selected === "Other");
   };
 
+  // ---- SUBMIT ----
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.amount || Number(formData.amount) <= 0) {
@@ -79,6 +87,7 @@ function EditExpense() {
     }
   };
 
+  // ---- RENDER ----
   return (
     <div className="d-flex justify-content-center align-items-center min-vh-75">
       <div className="card border-0 shadow-soft rounded-xl" style={{ maxWidth: "480px", width: "100%" }}>

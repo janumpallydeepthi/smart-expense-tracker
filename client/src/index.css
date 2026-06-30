@@ -218,3 +218,41 @@ body {
     font-size: 11px !important;
   }
 }
+
+/* Cards – improved spacing */
+.card {
+  border: none !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04) !important;
+  transition: all 0.2s ease !important;
+}
+.card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08) !important;
+}
+.card-body {
+  padding: 1.25rem !important;
+}
+
+/* Stats cards – responsive adjustments */
+@media (max-width: 576px) {
+  .card-body {
+    padding: 0.75rem !important;
+  }
+  .card-body h4 {
+    font-size: 18px !important;
+  }
+  .card-body .bg-primary-gradient {
+    width: 36px !important;
+    height: 36px !important;
+  }
+  .card-body .bg-primary-gradient svg {
+    width: 16px !important;
+    height: 16px !important;
+  }
+}
+
+/* Category badge in Expenses table */
+.expenses-container .badge.bg-light {
+  font-size: 14px !important;
+  padding: 6px 14px !important;
+}

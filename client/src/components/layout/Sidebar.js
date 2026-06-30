@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { FaChartPie, FaCreditCard, FaPlus, FaWallet, FaLightbulb, FaTimes } from "react-icons/fa";
+import { FaChartPie, FaCreditCard, FaPlus, FaWallet, FaLightbulb } from "react-icons/fa";
 
 function Sidebar({ toggleSidebar }) {
   return (

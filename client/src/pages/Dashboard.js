@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../services/api";
 import "./Dashboard.css";
 import { FaWallet, FaChartLine, FaTrophy, FaList } from 'react-icons/fa';
-
 import { Pie, Bar, Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -16,6 +15,7 @@ import {
   PointElement,
   LineElement,
   Title,
+  Filler
 } from "chart.js";
 
 ChartJS.register(
@@ -27,7 +27,8 @@ ChartJS.register(
   BarElement,
   PointElement,
   LineElement,
-  Title
+  Title,
+  Filler
 );
 
 function Dashboard() {
@@ -41,12 +42,42 @@ function Dashboard() {
   const [categoryData, setCategoryData] = useState({});
   const [monthlyData, setMonthlyData] = useState({});
 
-  useEffect(() => {
-    fetchExpenses();
-  }, []);
+  // ---------- Helper functions (defined BEFORE fetchExpenses) ----------
+  const calculateStats = (data) => {
+    const totalAmount = data.reduce((sum, exp) => sum + Number(exp.amount), 0);
+    const avgAmount = data.length ? totalAmount / data.length : 0;
+    const highestAmount = data.length
+      ? Math.max(...data.map((exp) => Number(exp.amount)))
+      : 0;
+    setTotal(totalAmount);
+    setAverage(avgAmount);
+    setHighest(highestAmount);
+  };
 
-  // ---------------- FETCH EXPENSES ----------------
-  const fetchExpenses = async () => {
+  const processCategoryData = (data) => {
+    const categories = {};
+    data.forEach((exp) => {
+      categories[exp.category] =
+        (categories[exp.category] || 0) + Number(exp.amount);
+    });
+    setCategoryData(categories);
+  };
+
+  const processMonthlyData = (data) => {
+    const months = {};
+    data.forEach((exp) => {
+      const date = new Date(exp.created_at || Date.now());
+      const monthYear = `${date.toLocaleString("default", {
+        month: "short",
+      })} ${date.getFullYear()}`;
+      months[monthYear] =
+        (months[monthYear] || 0) + Number(exp.amount);
+    });
+    setMonthlyData(months);
+  };
+
+  // ---------- fetchExpenses (uses axios, not api) ----------
+  const fetchExpenses = useCallback(async () => {
     try {
       const res = await axios.get("/expenses");
       setExpenses(res.data);
@@ -58,58 +89,21 @@ function Dashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []); // no dependencies – all helpers are stable
 
-  // ---------------- STATS ----------------
-  const calculateStats = (data) => {
-    const totalAmount = data.reduce((sum, exp) => sum + Number(exp.amount), 0);
-    const avgAmount = data.length ? totalAmount / data.length : 0;
-    const highestAmount = data.length
-      ? Math.max(...data.map((exp) => Number(exp.amount)))
-      : 0;
+  useEffect(() => {
+    fetchExpenses();
+  }, [fetchExpenses]);
 
-    setTotal(totalAmount);
-    setAverage(avgAmount);
-    setHighest(highestAmount);
-  };
-
-  // ---------------- CATEGORY DATA ----------------
-  const processCategoryData = (data) => {
-    const categories = {};
-    data.forEach((exp) => {
-      categories[exp.category] =
-        (categories[exp.category] || 0) + Number(exp.amount);
-    });
-    setCategoryData(categories);
-  };
-
-  // ---------------- MONTHLY DATA ----------------
-  const processMonthlyData = (data) => {
-    const months = {};
-    data.forEach((exp) => {
-      const date = new Date(exp.created_at || Date.now());
-      const monthYear = `${date.toLocaleString("default", {
-        month: "short",
-      })} ${date.getFullYear()}`;
-
-      months[monthYear] =
-        (months[monthYear] || 0) + Number(exp.amount);
-    });
-    setMonthlyData(months);
-  };
-
-  // ---------------- DELETE ACCOUNT ----------------
+  // ---------- DELETE ACCOUNT ----------
   const handleDeleteAccount = async () => {
     const confirmDelete = window.confirm(
       "Are you sure? This will permanently delete your account and ALL your expenses. This cannot be undone!"
     );
-
     if (!confirmDelete) return;
-
     try {
       await axios.delete("/users/me");
       alert("Account deleted successfully");
-
       localStorage.removeItem("token");
       navigate("/");
     } catch (err) {
@@ -118,7 +112,7 @@ function Dashboard() {
     }
   };
 
-  // ---------------- CHART DATA ----------------
+  // ---------- CHART DATA ----------
   const pieChartData = {
     labels: Object.keys(categoryData),
     datasets: [{
@@ -181,12 +175,12 @@ function Dashboard() {
     },
   };
 
-  // ---------------- LOADING ----------------
+  // ---------- LOADING ----------
   if (loading) {
     return <div className="loading-container">Loading dashboard data...</div>;
   }
 
-  // ---------------- UI ----------------
+  // ---------- RENDER ----------
   return (
     <div className="dashboard fade-in">
       <div className="mb-4">
@@ -196,56 +190,56 @@ function Dashboard() {
         <p className="text-secondary">Track and analyze your spending patterns</p>
       </div>
 
-      {/* Stats Cards */}
-      <div className="row g-3 mb-4">
-        <div className="col-xl-3 col-lg-6 col-md-6 col-6">
+      {/* Stats Cards – 4 columns with equal height */}
+      <div className="row g-4 mb-4">
+        <div className="col-12 col-sm-6 col-xl-3">
           <div className="card border-0 shadow-soft rounded-xl h-100">
-            <div className="card-body d-flex align-items-center">
-              <div className="bg-primary-gradient rounded-3 d-flex align-items-center justify-content-center me-3" style={{ width: 48, height: 48, flexShrink: 0 }}>
+            <div className="card-body d-flex align-items-center gap-3">
+              <div className="bg-primary-gradient rounded-3 d-flex align-items-center justify-content-center flex-shrink-0" style={{ width: 48, height: 48 }}>
                 <FaWallet className="text-white" size={20} />
               </div>
               <div>
-                <span className="text-secondary fw-medium d-block">Total Expenses</span>
-                <h4 className="fw-bold m-0">₹{total.toFixed(2)}</h4>
+                <span className="text-secondary fw-medium d-block" style={{ fontSize: '13px' }}>Total Expenses</span>
+                <h4 className="fw-bold m-0" style={{ fontSize: '22px' }}>₹{total.toFixed(2)}</h4>
               </div>
             </div>
           </div>
         </div>
         <div className="col-12 col-sm-6 col-xl-3">
           <div className="card border-0 shadow-soft rounded-xl h-100">
-            <div className="card-body d-flex align-items-center">
-              <div className="bg-primary-gradient rounded-3 d-flex align-items-center justify-content-center me-3" style={{ width: 48, height: 48, flexShrink: 0 }}>
+            <div className="card-body d-flex align-items-center gap-3">
+              <div className="bg-primary-gradient rounded-3 d-flex align-items-center justify-content-center flex-shrink-0" style={{ width: 48, height: 48 }}>
                 <FaChartLine className="text-white" size={20} />
               </div>
               <div>
-                <span className="text-secondary fw-medium d-block">Average Expense</span>
-                <h4 className="fw-bold m-0">₹{average.toFixed(2)}</h4>
+                <span className="text-secondary fw-medium d-block" style={{ fontSize: '13px' }}>Average Expense</span>
+                <h4 className="fw-bold m-0" style={{ fontSize: '22px' }}>₹{average.toFixed(2)}</h4>
               </div>
             </div>
           </div>
         </div>
-        <div className="col-xl-3 col-lg-6 col-md-6 col-6">
+        <div className="col-12 col-sm-6 col-xl-3">
           <div className="card border-0 shadow-soft rounded-xl h-100">
-            <div className="card-body d-flex align-items-center">
-              <div className="bg-primary-gradient rounded-3 d-flex align-items-center justify-content-center me-3" style={{ width: 48, height: 48, flexShrink: 0 }}>
+            <div className="card-body d-flex align-items-center gap-3">
+              <div className="bg-primary-gradient rounded-3 d-flex align-items-center justify-content-center flex-shrink-0" style={{ width: 48, height: 48 }}>
                 <FaTrophy className="text-white" size={20} />
               </div>
               <div>
-                <span className="text-secondary fw-medium d-block">Highest Expense</span>
-                <h4 className="fw-bold m-0">₹{highest.toFixed(2)}</h4>
+                <span className="text-secondary fw-medium d-block" style={{ fontSize: '13px' }}>Highest Expense</span>
+                <h4 className="fw-bold m-0" style={{ fontSize: '22px' }}>₹{highest.toFixed(2)}</h4>
               </div>
             </div>
           </div>
         </div>
-        <div className="col-xl-3 col-lg-6 col-md-6 col-6">
+        <div className="col-12 col-sm-6 col-xl-3">
           <div className="card border-0 shadow-soft rounded-xl h-100">
-            <div className="card-body d-flex align-items-center">
-              <div className="bg-primary-gradient rounded-3 d-flex align-items-center justify-content-center me-3" style={{ width: 48, height: 48, flexShrink: 0 }}>
+            <div className="card-body d-flex align-items-center gap-3">
+              <div className="bg-primary-gradient rounded-3 d-flex align-items-center justify-content-center flex-shrink-0" style={{ width: 48, height: 48 }}>
                 <FaList className="text-white" size={20} />
               </div>
               <div>
-                <span className="text-secondary fw-medium d-block">Transactions</span>
-                <h4 className="fw-bold m-0">{expenses.length}</h4>
+                <span className="text-secondary fw-medium d-block" style={{ fontSize: '13px' }}>Transactions</span>
+                <h4 className="fw-bold m-0" style={{ fontSize: '22px' }}>{expenses.length}</h4>
               </div>
             </div>
           </div>
