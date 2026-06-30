@@ -106,88 +106,91 @@ function Expenses() {
   }
 
   return (
-    <div className="expenses-container">
-      <div className="expenses-header">
-        <h2>Expense Management</h2>
-        <div className="total-badge">
-          <span>Total Amount</span>
-          <span>₹{totalAmount.toFixed(2)}</span>
-        </div>
+  <div className="expenses-container fade-in">
+    {/* Header */}
+    <div className="d-flex flex-wrap justify-content-between align-items-center mb-4">
+      <h4 className="fw-bold" style={{ color: 'var(--slate-900)' }}>Expense Management</h4>
+      <div className="bg-primary-gradient text-white px-4 py-2 rounded-3 text-center shadow-sm">
+        <small className="d-block">Total Amount</small>
+        <span className="fw-bold fs-5">₹{totalAmount.toFixed(2)}</span>
       </div>
+    </div>
 
-      <div className="filters-bar">
-        <div className="filters-grid">
-          <div className="filter-group">
-            <label>Search</label>
+    {/* Filters */}
+    <div className="card border-0 shadow-soft rounded-xl mb-4">
+      <div className="card-body">
+        <div className="row g-3">
+          <div className="col-md-6">
+            <label className="fw-semibold small text-secondary">Search</label>
             <input
               type="text"
+              className="form-control"
               placeholder="Search by category or amount..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="filter-input"
             />
           </div>
-
-          <div className="filter-group">
-            <label>Category</label>
+          <div className="col-md-6">
+            <label className="fw-semibold small text-secondary">Category</label>
             <select
+              className="form-select"
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="filter-input"
             >
-              {allCategories.map(cat => (
+              {allCategories.map((cat) => (
                 <option key={cat} value={cat}>{cat}</option>
               ))}
             </select>
           </div>
         </div>
       </div>
+    </div>
 
-      <div className="expenses-table-container">
-        <table className="expenses-table">
-          <thead>
+    {/* Table */}
+    <div className="card border-0 shadow-soft rounded-xl">
+      <div className="table-responsive">
+        <table className="table table-hover align-middle mb-0">
+          <thead className="bg-light">
             <tr>
-              <th onClick={() => handleSort("category")}>
-                Category {getSortIcon("category")}
+              <th onClick={() => handleSort('category')} style={{ cursor: 'pointer', minWidth: '120px' }}>
+                Category {sortField === 'category' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
               </th>
-              <th onClick={() => handleSort("amount")}>
-                Amount {getSortIcon("amount")}
+              <th onClick={() => handleSort('amount')} style={{ cursor: 'pointer', minWidth: '100px' }}>
+                Amount {sortField === 'amount' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
               </th>
-              <th onClick={() => handleSort("date")}>
-                Date {getSortIcon("date")}
+              <th onClick={() => handleSort('date')} style={{ cursor: 'pointer', minWidth: '120px' }}>
+                Date {sortField === 'date' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}
               </th>
-              <th>Actions</th>
+              <th style={{ minWidth: '130px' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredExpenses.length === 0 ? (
               <tr>
-                <td colSpan="4" className="empty-state">
-                  No expenses found
-                </td>
+                <td colSpan="4" className="text-center text-secondary py-4">No expenses found.</td>
               </tr>
             ) : (
               filteredExpenses.map((expense) => (
                 <tr key={expense.id} className="expense-row">
                   <td>
-                    <span className="category-badge">
+                    <span className="badge bg-light text-dark fw-normal px-3 py-2">
                       {expense.category}
-                      {!["Food", "Travel", "Shopping", "Entertainment", "Bills", "Other"].includes(expense.category) && (
-                        <span className="custom-badge">Custom</span>
-                      )}
                     </span>
+                    {!['Food', 'Travel', 'Shopping', 'Entertainment', 'Bills', 'Other'].includes(expense.category) && (
+                      <span className="badge bg-primary-gradient ms-1">Custom</span>
+                    )}
                   </td>
-                  <td className="amount-cell">₹{expense.amount}</td>
+                  <td className="fw-bold">₹{expense.amount}</td>
                   <td>{new Date(expense.created_at || Date.now()).toLocaleDateString()}</td>
-                  <td className="actions">
+                  <td>
                     <button
-                      className="edit-btn"
+                      className="btn btn-sm btn-success me-1"
                       onClick={() => navigate(`/edit-expense/${expense.id}`)}
                     >
                       Edit
                     </button>
                     <button
-                      className="delete-btn"
+                      className="btn btn-sm btn-danger"
                       onClick={() => handleDelete(expense.id)}
                     >
                       Delete
@@ -200,7 +203,8 @@ function Expenses() {
         </table>
       </div>
     </div>
-  );
+  </div>
+);
 }
 
 export default Expenses;

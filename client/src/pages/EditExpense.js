@@ -1,63 +1,39 @@
 import { useEffect, useState } from "react";
-import axios from "../services/api";
+import api from "../services/api";
 import { useNavigate, useParams } from "react-router-dom";
-import "./AddExpense.css";
-
-const predefinedCategories = [
-  "Food",
-  "Travel",
-  "Shopping",
-  "Entertainment",
-  "Bills",
-  "Other",
-];
+import { PREDEFINED_CATEGORIES } from "../constants/categories";
 
 function EditExpense() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-
   const [formData, setFormData] = useState({
     amount: "",
     category: "",
     customCategory: "",
     date: "",
   });
-
   const [showCustomInput, setShowCustomInput] = useState(false);
 
-  // ---------------- FETCH EXPENSE ----------------
   useEffect(() => {
     fetchExpense();
   }, []);
 
   const fetchExpense = async () => {
     try {
-      const res = await axios.get("/expenses");
-
-      const expense = res.data.find(
-        (e) => e.id === Number(id)
-      );
-
+      const res = await api.get("/expenses");
+      const expense = res.data.find((e) => e.id === Number(id));
       if (!expense) return;
-
-      const isPredefined = predefinedCategories.includes(
-        expense.category
-      );
-
+      const isPredefined = PREDEFINED_CATEGORIES.includes(expense.category);
       const formattedDate = expense.created_at
-        ? new Date(expense.created_at)
-            .toISOString()
-            .split("T")[0]
+        ? new Date(expense.created_at).toISOString().split("T")[0]
         : new Date().toISOString().split("T")[0];
-
       setFormData({
         amount: expense.amount,
         category: isPredefined ? expense.category : "Other",
         customCategory: isPredefined ? "" : expense.category,
         date: formattedDate,
       });
-
       setShowCustomInput(!isPredefined);
     } catch (err) {
       console.error(err);
@@ -65,149 +41,112 @@ function EditExpense() {
     }
   };
 
-  // ---------------- CATEGORY CHANGE ----------------
   const handleCategoryChange = (e) => {
     const selected = e.target.value;
-
     setFormData((prev) => ({
       ...prev,
       category: selected,
-      customCategory:
-        selected === "Other" ? prev.customCategory : "",
+      customCategory: selected === "Other" ? prev.customCategory : "",
     }));
-
     setShowCustomInput(selected === "Other");
   };
 
-  // ---------------- SUBMIT ----------------
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!formData.amount || Number(formData.amount) <= 0) {
       alert("Enter valid amount");
       return;
     }
-
     setLoading(true);
-
     try {
       let finalCategory = formData.category;
-
-      if (
-        formData.category === "Other" &&
-        formData.customCategory.trim()
-      ) {
+      if (formData.category === "Other" && formData.customCategory.trim()) {
         finalCategory = formData.customCategory.trim();
       }
-
       const payload = {
         amount: formData.amount,
         category: finalCategory,
         date: formData.date,
       };
-
-      console.log("Updating expense:", payload);
-
-      await axios.put(`/expenses/${id}`, payload);
-
+      await api.put(`/expenses/${id}`, payload);
       alert("Expense updated successfully");
       navigate("/expenses");
     } catch (err) {
       console.error(err);
-      alert(
-        err.response?.data?.message ||
-          "Update failed"
-      );
+      alert(err.response?.data?.message || "Update failed");
     } finally {
       setLoading(false);
     }
   };
 
-  // ---------------- UI ----------------
   return (
-    <div className="add-expense-container">
-      <div className="expense-form-card">
-
-        <div className="form-header">
-          <h2>Edit Expense</h2>
-          <p>Modify your transaction details</p>
+    <div className="d-flex justify-content-center align-items-center min-vh-75">
+      <div className="card border-0 shadow-soft rounded-xl" style={{ maxWidth: "480px", width: "100%" }}>
+        <div className="card-header bg-primary-gradient text-white text-center py-4 rounded-top-3">
+          <h4 className="fw-bold m-0">Edit Expense</h4>
+          <p className="m-0 opacity-75">Modify your transaction details</p>
         </div>
-
-        <form onSubmit={handleSubmit} className="form-body">
-
-          {/* AMOUNT */}
-          <div className="form-group">
-            <label>Amount (₹)</label>
-            <input
-              type="number"
-              value={formData.amount}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  amount: e.target.value,
-                })
-              }
-              required
-            />
-          </div>
-
-          {/* DATE */}
-          <div className="form-group">
-            <label>📅 Date</label>
-            <input
-              type="date"
-              value={formData.date}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  date: e.target.value,
-                })
-              }
-              required
-            />
-          </div>
-
-          {/* CATEGORY */}
-          <div className="form-group">
-            <label>Category</label>
-            <select
-              value={formData.category}
-              onChange={handleCategoryChange}
-            >
-              {predefinedCategories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* CUSTOM CATEGORY */}
-          {showCustomInput && (
-            <div className="form-group">
-              <label>Custom Category</label>
+        <div className="card-body p-4">
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label className="fw-semibold">Amount (₹)</label>
               <input
-                type="text"
-                value={formData.customCategory}
+                type="number"
+                className="form-control"
+                placeholder="Enter amount"
+                value={formData.amount}
                 onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    customCategory: e.target.value,
-                  })
+                  setFormData({ ...formData, amount: e.target.value })
                 }
+                required
+                step="0.01"
               />
-              <small>
-                Example: Medical, Education, Subscription
-              </small>
             </div>
-          )}
-
-          {/* SUBMIT */}
-          <button type="submit" disabled={loading}>
-            {loading ? "Updating..." : "Update Expense"}
-          </button>
-
-        </form>
+            <div className="mb-3">
+              <label className="fw-semibold">Date</label>
+              <input
+                type="date"
+                className="form-control"
+                value={formData.date}
+                onChange={(e) =>
+                  setFormData({ ...formData, date: e.target.value })
+                }
+                required
+              />
+              <small className="text-secondary">Choose expense date</small>
+            </div>
+            <div className="mb-3">
+              <label className="fw-semibold">Category</label>
+              <select
+                className="form-select"
+                value={formData.category}
+                onChange={handleCategoryChange}
+              >
+                {PREDEFINED_CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
+            </div>
+            {showCustomInput && (
+              <div className="mb-3">
+                <label className="fw-semibold">Custom Category</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Enter custom category"
+                  value={formData.customCategory}
+                  onChange={(e) =>
+                    setFormData({ ...formData, customCategory: e.target.value })
+                  }
+                />
+                <small className="text-secondary">Example: Medical, Education, Subscription</small>
+              </div>
+            )}
+            <button type="submit" className="btn btn-primary w-100 py-2 fw-semibold" disabled={loading}>
+              {loading ? "Updating..." : "Update Expense"}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

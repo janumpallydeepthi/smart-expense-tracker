@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import api from "../services/api";
-import "./Register.css";
+import { FaEnvelope, FaLock, FaWallet } from "react-icons/fa";
+import "./Auth.css";
 
 function Login() {
   const navigate = useNavigate();
@@ -21,13 +22,9 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
-      // Fixed: removed "/auth" from the path
       const res = await api.post("/login", formData);
-      
       console.log("Login response:", res.data);
-      
       if (res.data.token) {
         localStorage.setItem("token", res.data.token);
         alert("Login successful!");
@@ -48,40 +45,64 @@ function Login() {
   };
 
   return (
-    <div className="register-container">
-      <div className="register-card">
-        <h2>Welcome Back</h2>
-        <p className="subtitle">Login to your account</p>
+    <div className="auth-container">
+      <div className="auth-card">
+        {/* Brand */}
+        <div className="auth-brand">
+          <div className="logo-icon">
+            <FaWallet />
+          </div>
+          <h2>Welcome Back</h2>
+          <p>Login to your account</p>
+        </div>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="auth-form">
+          {/* Email */}
           <div className="form-group">
             <label>Email</label>
-            <input
-              type="email"
-              name="email"
-              placeholder="Enter email"
-              onChange={handleChange}
-              required
-            />
+            <div className="input-wrapper">
+              <FaEnvelope className="input-icon" />
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                onChange={handleChange}
+                required
+              />
+            </div>
           </div>
 
+          {/* Password */}
           <div className="form-group">
             <label>Password</label>
-            <input
-              type="password"
-              name="password"
-              placeholder="Enter password"
-              onChange={handleChange}
-              required
-            />
+            <div className="input-wrapper">
+              <FaLock className="input-icon" />
+              <input
+                type="password"
+                name="password"
+                placeholder="Enter your password"
+                onChange={handleChange}
+                required
+              />
+            </div>
           </div>
 
-          <button className="btn-primary" disabled={loading}>
+          {/* Forgot Password */}
+          <div className="auth-options">
+            <a href="#">Forgot Password?</a>
+          </div>
+
+          <button type="submit" className="auth-btn" disabled={loading}>
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 
-        <p className="footer-text">
+        {/* Divider */}
+        <div className="auth-divider">
+          <span>or</span>
+        </div>
+
+        <p className="auth-footer">
           Don't have an account? <Link to="/register">Register</Link>
         </p>
       </div>

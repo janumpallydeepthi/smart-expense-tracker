@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../services/api";
 import "./Dashboard.css";
+import { FaWallet, FaChartLine, FaTrophy, FaList } from 'react-icons/fa';
 
 import { Pie, Bar, Line } from "react-chartjs-2";
 import {
@@ -120,21 +121,20 @@ function Dashboard() {
   // ---------------- CHART DATA ----------------
   const pieChartData = {
     labels: Object.keys(categoryData),
-    datasets: [
-      {
-        data: Object.values(categoryData),
-        backgroundColor: [
-          "#6366f1",
-          "#8b5cf6",
-          "#ec4899",
-          "#f59e0b",
-          "#10b981",
-          "#ef4444",
-          "#06b6d4",
-        ],
-        borderWidth: 0,
-      },
-    ],
+    datasets: [{
+      data: Object.values(categoryData),
+      backgroundColor: [
+        '#a5b4fc', // light indigo
+        '#fcd34d', // light amber
+        '#6ee7b7', // light emerald
+        '#fca5a5', // light red
+        '#fdba74', // light orange
+        '#c4b5fd', // light purple
+        '#f9a8d4', // light pink
+        '#67e8f9', // light cyan
+      ],
+      borderWidth: 0,
+    }],
   };
 
   const barChartData = {
@@ -188,119 +188,139 @@ function Dashboard() {
 
   // ---------------- UI ----------------
   return (
-    <div className="dashboard">
-
-      <div className="welcome-section">
-        <h2>Financial Dashboard</h2>
-        <p>Track and analyze your spending patterns</p>
+    <div className="dashboard fade-in">
+      <div className="mb-4">
+        <h2 className="fw-bold" style={{ fontSize: '28px', color: 'var(--slate-900)' }}>
+          Financial Dashboard
+        </h2>
+        <p className="text-secondary">Track and analyze your spending patterns</p>
       </div>
 
-      {/* ---------------- STATS ---------------- */}
-      <div className="stats-grid">
-        <div className="stat-card">
-          <span>Total Expenses</span>
-          <div className="stat-value">₹{total.toFixed(2)}</div>
+      {/* Stats Cards */}
+      <div className="row g-3 mb-4">
+        <div className="col-xl-3 col-lg-6 col-md-6 col-6">
+          <div className="card border-0 shadow-soft rounded-xl h-100">
+            <div className="card-body d-flex align-items-center">
+              <div className="bg-primary-gradient rounded-3 d-flex align-items-center justify-content-center me-3" style={{ width: 48, height: 48, flexShrink: 0 }}>
+                <FaWallet className="text-white" size={20} />
+              </div>
+              <div>
+                <span className="text-secondary fw-medium d-block">Total Expenses</span>
+                <h4 className="fw-bold m-0">₹{total.toFixed(2)}</h4>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <div className="stat-card">
-          <span>Average Expense</span>
-          <div className="stat-value">₹{average.toFixed(2)}</div>
+        <div className="col-12 col-sm-6 col-xl-3">
+          <div className="card border-0 shadow-soft rounded-xl h-100">
+            <div className="card-body d-flex align-items-center">
+              <div className="bg-primary-gradient rounded-3 d-flex align-items-center justify-content-center me-3" style={{ width: 48, height: 48, flexShrink: 0 }}>
+                <FaChartLine className="text-white" size={20} />
+              </div>
+              <div>
+                <span className="text-secondary fw-medium d-block">Average Expense</span>
+                <h4 className="fw-bold m-0">₹{average.toFixed(2)}</h4>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <div className="stat-card">
-          <span>Highest Expense</span>
-          <div className="stat-value">₹{highest.toFixed(2)}</div>
+        <div className="col-xl-3 col-lg-6 col-md-6 col-6">
+          <div className="card border-0 shadow-soft rounded-xl h-100">
+            <div className="card-body d-flex align-items-center">
+              <div className="bg-primary-gradient rounded-3 d-flex align-items-center justify-content-center me-3" style={{ width: 48, height: 48, flexShrink: 0 }}>
+                <FaTrophy className="text-white" size={20} />
+              </div>
+              <div>
+                <span className="text-secondary fw-medium d-block">Highest Expense</span>
+                <h4 className="fw-bold m-0">₹{highest.toFixed(2)}</h4>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <div className="stat-card">
-          <span>Total Transactions</span>
-          <div className="stat-value">{expenses.length}</div>
+        <div className="col-xl-3 col-lg-6 col-md-6 col-6">
+          <div className="card border-0 shadow-soft rounded-xl h-100">
+            <div className="card-body d-flex align-items-center">
+              <div className="bg-primary-gradient rounded-3 d-flex align-items-center justify-content-center me-3" style={{ width: 48, height: 48, flexShrink: 0 }}>
+                <FaList className="text-white" size={20} />
+              </div>
+              <div>
+                <span className="text-secondary fw-medium d-block">Transactions</span>
+                <h4 className="fw-bold m-0">{expenses.length}</h4>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* ---------------- CHARTS ---------------- */}
-      <div className="charts-grid">
+      {/* Charts */}
+      <div className="row g-3 mb-4">
         {Object.keys(categoryData).length > 0 && (
-          <div className="chart-card">
-            <div className="chart-title">Expense Distribution</div>
-            <div className="chart-container">
-              <Pie data={pieChartData} options={chartOptions} />
+          <div className="col-lg-6">
+            <div className="card border-0 shadow-soft rounded-xl h-100">
+              <div className="card-body">
+                <h6 className="fw-semibold">Expense Distribution</h6>
+                <div style={{ height: 280 }}>
+                  <Pie data={pieChartData} options={chartOptions} />
+                </div>
+              </div>
             </div>
           </div>
         )}
-
         {Object.keys(monthlyData).length > 0 && (
           <>
-            <div className="chart-card">
-              <div className="chart-title">Monthly Trend</div>
-              <div className="chart-container">
-                <Bar data={barChartData} options={chartOptions} />
+            <div className="col-lg-6">
+              <div className="card border-0 shadow-soft rounded-xl h-100">
+                <div className="card-body">
+                  <h6 className="fw-semibold">Monthly Trend</h6>
+                  <div style={{ height: 280 }}>
+                    <Bar data={barChartData} options={chartOptions} />
+                  </div>
+                </div>
               </div>
             </div>
-
-            <div className="chart-card">
-              <div className="chart-title">Spending Pattern</div>
-              <div className="chart-container">
-                <Line data={lineChartData} options={chartOptions} />
+            <div className="col-12">
+              <div className="card border-0 shadow-soft rounded-xl">
+                <div className="card-body">
+                  <h6 className="fw-semibold">Spending Pattern</h6>
+                  <div style={{ height: 280 }}>
+                    <Line data={lineChartData} options={chartOptions} />
+                  </div>
+                </div>
               </div>
             </div>
           </>
         )}
       </div>
 
-      {/* ---------------- RECENT EXPENSES (FIXED) ---------------- */}
-      <div className="recent-transactions">
-        <h3>Recent Transactions</h3>
-
-        {recentExpenses.length === 0 ? (
-          <p>No transactions yet.</p>
-        ) : (
-          recentExpenses.map((expense) => (
-            <div key={expense.id} className="transaction-item">
-              <div className="transaction-info">
-                <div className="category-details">
-                  <h4>{expense.category}</h4>
-                  <p>
-                    {new Date(expense.created_at).toLocaleDateString(
-                      "en-IN",
-                      {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      }
-                    )}
-                  </p>
+      {/* Recent Transactions */}
+      <div className="card border-0 shadow-soft rounded-xl">
+        <div className="card-body">
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <h6 className="fw-semibold m-0">Recent Transactions</h6>
+            <a href="/expenses" className="text-primary text-decoration-none small fw-semibold">View All →</a>
+          </div>
+          {recentExpenses.length === 0 ? (
+            <p className="text-center text-secondary my-4">No transactions yet.</p>
+          ) : (
+            recentExpenses.map((expense) => (
+              <div key={expense.id} className="d-flex justify-content-between align-items-center py-2 border-bottom border-light">
+                <div>
+                  <div className="fw-semibold">{expense.category}</div>
+                  <small className="text-secondary">{new Date(expense.created_at).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</small>
+                </div>
+                <div className="text-end">
+                  <div className="fw-bold" style={{ color: 'var(--slate-900)' }}>₹{expense.amount}</div>
+                  <small className="text-secondary">{new Date(expense.created_at).toLocaleTimeString()}</small>
                 </div>
               </div>
-
-              <div className="transaction-amount">
-                <div className="amount">₹{expense.amount}</div>
-                <div className="date">
-                  {new Date(expense.created_at).toLocaleTimeString()}
-                </div>
-              </div>
-            </div>
-          ))
-        )}
+            ))
+          )}
+        </div>
       </div>
 
-      {/* ---------------- DELETE ACCOUNT ---------------- */}
-      <div style={{ marginTop: "40px", textAlign: "center" }}>
-        <button
-          onClick={handleDeleteAccount}
-          style={{
-            padding: "12px 30px",
-            background: "#ef4444",
-            color: "white",
-            border: "none",
-            borderRadius: "10px",
-            fontSize: "16px",
-            fontWeight: "600",
-            cursor: "pointer",
-          }}
-        >
-          Delete My Account
-        </button>
+      {/* Delete Account */}
+      <div className="text-center mt-4">
+        <button className="btn btn-danger" onClick={handleDeleteAccount}>Delete My Account</button>
       </div>
     </div>
   );
