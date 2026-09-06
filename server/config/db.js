@@ -26,8 +26,11 @@ const { Pool } = require('pg');
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
-    rejectUnauthorized: false, // Required for Supabase
+    rejectUnauthorized: false,
   },
+  // Force IPv4 connection
+  host: process.env.DB_HOST || 'db.exxfdamrsbdvhvchikxh.supabase.co',
+  family: 4, // Force IPv4
 });
 
 // Test connection on startup
