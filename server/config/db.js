@@ -24,24 +24,24 @@
 const { Pool } = require('pg');
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  host: 'db.exxfdamrsbdvhvchikxh.supabase.co',
+  port: 5432,
+  user: 'postgres',
+  password: 'SmartExpenseTracker2026',
+  database: 'postgres',
   ssl: {
     rejectUnauthorized: false,
     require: true,
   },
-  // Force IPv4 and use the correct host
-  host: 'db.exxfdamrsbdvhvchikxh.supabase.co',
-  port: 5432,
+  // Force IPv4
   family: 4,
   keepAlive: true,
   connectionTimeoutMillis: 10000,
 });
 
-// Test connection on startup
 pool.connect((err, client, release) => {
   if (err) {
     console.error('❌ Database connection failed:', err.message);
-    console.error('Please check your DATABASE_URL environment variable.');
     process.exit(1);
   } else {
     console.log('✅ Database connected successfully to Supabase');
