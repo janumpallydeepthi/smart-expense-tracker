@@ -24,9 +24,10 @@
 const { Pool } = require('pg');
 
 const pool = new Pool({
-  host: 'db.exxfdamrsbdvhvchikxh.supabase.co',
-  port: 5432,
-  user: 'postgres',
+  // IPv4 pooler hostname
+  host: 'aws-0-ap-southeast-1.pooler.supabase.com',
+  port: 6543,
+  user: 'postgres.exxfdamrsbdvhvchikxh',
   password: 'SmartExpenseTracker2026',
   database: 'postgres',
   ssl: {
@@ -39,6 +40,7 @@ const pool = new Pool({
   connectionTimeoutMillis: 10000,
 });
 
+// Test connection on startup
 pool.connect((err, client, release) => {
   if (err) {
     console.error('❌ Database connection failed:', err.message);
